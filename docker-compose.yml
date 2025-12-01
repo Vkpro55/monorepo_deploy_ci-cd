@@ -1,0 +1,58 @@
+version: "3.8"
+
+services:
+  postgres2:
+    image: postgres:latest
+    container_name: postgres2
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: mypass
+      POSTGRES_DB: postgres
+    ports:
+      - "5435:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend2:
+    build: 
+      context: .
+      dockerfile: ./docker/Dockerfile.backend
+    ports:
+      - "8080:8080"
+    container_name: backend2
+    environment:
+      - DATABASE_URL: postgresql://postgres:mypass@postgres:5432/postgres
+    depends_on:
+      postgres2:
+        condition: service_healthy
+
+  websocket2:
+    build: 
+      context: .
+      dockerfile: ./docker/Dockerfile.ws
+    ports:
+      - "8081:8081"
+    container_name: websocket2
+    environment:
+      - DATABASE_URL: postgresql://postgres:mypass@postgres:5432/postgres
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  web:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.frontend
+      args:
+        - DATABASE_URL=postgresql://postgres:mypass@host.docker.internal:5435/postgres
+    ports:
+        - "3000:3000"
+    container_name: web
+    environment:
+      - DATABASE_URL: postgresql://postgres:mypass@postgres:5432/postgres
+    depends_on:
+      postgres:
+        condition: service_healthy

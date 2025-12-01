@@ -1,23 +1,33 @@
-# provuide a base image -> OS + bun + nodejs runtime
 FROM oven/bun:1
 
-WORKDIR /user/src/app
+WORKDIR /usr/src/app
 
-# COPY ./ ... in your Dockerfile copies from the build context, not from the folder where the Dockerfile lives (unless that folder is the build context).
-COPY package.json bun.lock turbo.json ./
+ARG DATABASE_URL
+COPY ./packages ./packages
+COPY ./bun.lock ./bun.lock
 
-# Copy ONLY workspace package.json files for caching
-COPY apps/web/package.json ./apps/web/package.json
-COPY packages ./packages
+COPY ./package.json ./package.json
+COPY ./turbo.json ./turbo.json
+
+COPY ./apps/web ./apps/web
 
 RUN bun install
-RUN bun run db:generate
+# RUN apt-get update -y && apt-get install -y openssl
+RUN bun add -d prisma
 
-# build the frontend
-RUN bun run build
+# Go to db package
+WORKDIR /usr/src/app/packages/db
 
-COPY  /apps/web ./apps/web
+# Run migrations & generate client
+RUN DATABASE_URL=${DATABASE_URL} bun prisma migrate deploy
+RUN bun prisma generate
 
-EXPOSE 8080
+# Go back to root
+WORKDIR /usr/src/app
 
-CMD ["bun", "run", "start:backend"]
+# Build Next.js web app
+RUN DATABASE_URL=${DATABASE_URL} bun run build
+
+EXPOSE 3000
+
+ENTRYPOINT ["sh", "-c", "bunx prisma migrate deploy && exec bun run start:web"]

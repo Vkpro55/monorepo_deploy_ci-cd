@@ -1,0 +1,17 @@
+## Build the docker code (image)
+## Push the image to Docker Hub
+## SSH into VM and start the new container
+
+name: CD Backend
+
+on: 
+  push:
+    branches: ["main"]
+
+jobs:
+  build_and_push:
+    name: Build the docker image and push to Docker Hub
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 

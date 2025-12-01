@@ -1,20 +1,16 @@
 {
   "name": "db",
-  "module": "index.ts",
   "type": "module",
   "exports": {
     "./client": "./index.ts"
   },
+  "dependencies": {
+    "@prisma/client": "^7.0.1",
+    "prisma": "^7.0.1",
+    "dotenv": "^17.2.3",
+    "@prisma/adapter-pg": "^7.0.1"
+  },
   "devDependencies": {
     "@types/bun": "latest"
-  },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
-  },
-  "dependencies": {
-    "@prisma/adapter-pg": "^7.0.1",
-    "@prisma/client": "^7.0.1",
-    "dotenv": "^17.2.3",
-    "prisma": "^7.0.1"
   }
 }
