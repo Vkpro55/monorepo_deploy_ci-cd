@@ -5,8 +5,10 @@
     "": {
       "name": "week_27.2_devops",
       "dependencies": {
+        "@prisma/client": "^7.0.1",
         "@types/express": "^5.0.5",
         "express": "^5.1.0",
+        "prisma": "^7.0.1",
       },
       "devDependencies": {
         "prettier": "^3.6.2",

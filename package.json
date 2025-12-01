@@ -7,7 +7,7 @@
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
-    "db:generate": "cd packages/db && bun prisma generate && cd ../..",
+    "db:generate": "bun prisma generate --schema=packages/db/prisma/schema.prisma",
     "start:web": "cd apps/web && bun run start",
     "start:backend": "cd apps/backend && bun run index.ts",
     "start:websocket": "cd apps/websocket && bun run index.ts"
@@ -26,7 +26,9 @@
     "packages/*"
   ],
   "dependencies": {
+    "@prisma/client": "^7.0.1",
     "@types/express": "^5.0.5",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "prisma": "^7.0.1"
   }
 }
