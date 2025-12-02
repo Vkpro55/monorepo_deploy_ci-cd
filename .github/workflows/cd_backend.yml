@@ -34,4 +34,4 @@ jobs:
         run: |
           echo "${{ secrets.SSH_PRIVATE_KEY }}" &> ~/ssh_key
           chmod 700 /home/runner/ssh_key
-          ssh -o StrictHostKeyChecking=no -i ~/ssh_key monorepo@35.232.231.68 -t "docker stop backend && docker run -d --name backend -p 8000:8000 ${{ secrets.DOCKERHUB_USERNAME }}/backend:${{ github.sha }}"
+          ssh -o StrictHostKeyChecking=no -i ~/ssh_key monorepo@35.232.231.68 -t "docker stop backend && docker rm backend && docker run -d --name backend -p 8000:8000 ${{ secrets.DOCKERHUB_USERNAME }}/backend:${{ github.sha }}"
