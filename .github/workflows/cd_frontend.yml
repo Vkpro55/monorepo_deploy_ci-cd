@@ -2,7 +2,7 @@
 ## Push the image to Docker Hub
 ## SSH into VM and start the new container
 
-name: Continuous Deployment (Prod) (Backend)
+name: Continuous Deployment (Prod) (frontend)
 on:
   push:
     branches: [ main ]
